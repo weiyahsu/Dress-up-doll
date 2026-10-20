@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 手繪風棉花娃娃客製化系統與生產規格工作站 ✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Zen Maru Gothic & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Zen Maru Gothic', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    colors: {
+                        plushie: {
+                            50: '#fcf8f2',
+                            100: '#f7edeb',
+                            200: '#ede6f5',
+                            300: '#d8cded',
+                            400: '#b5a4ce',
+                            500: '#8b78a5',
+                            600: '#6d5a86',
+                            700: '#524267',
+                            brown: '#7f5539',
+                            blush: '#ffb3c1',
+                            toast: '#ddb892',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 25px -5px rgba(139, 120, 165, 0.2), 0 8px 10px -6px rgba(139, 120, 165, 0.1)',
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ede6f5;
+            background-image: radial-gradient(#d5c8e3 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            background-attachment: fixed;
+        }
+
+        .btn-bounce {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-bounce:hover {
+            transform: translateY(-2px) scale(1.02);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f7edeb; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #b5a4ce; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b78a5; }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(1.5deg); }
+        }
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        /* Pattern grid background for canvas wrapper */
+        .canvas-bg-pattern {
+            background: linear-gradient(135deg, #e2d8ee 25%, #d1c2e5 25%, #d1c2e5 50%, #e2d8ee 50%, #e2d8ee 75%, #d1c2e5 75%, #d1c2e5 100%);
+            background-size: 32px 32px;
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-700 min-h-screen flex flex-col selection:bg-purple-200 selection:text-purple-800">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b-2 border-purple-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-300 via-pink-200 to-amber-100 flex items-center justify-center text-slate-700 font-black text-2xl shadow-soft">
+                        🧸
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-black text-lg sm:text-xl text-slate-800 tracking-wide">手繪風棉花娃娃規格與生產模擬系統</h1>
+                            <span class="hidden sm:inline-block bg-purple-100 text-purple-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-purple-300">
+                                v4.2 Production Ready
+                            </span>
+                        </div>
+                        <p class="text-xs text-purple-600 font-medium">Soft Sketch Sticker & Full-Outfit Transformation Engine</p>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation Buttons -->
+                <nav class="flex bg-purple-100/80 p-1.5 rounded-2xl border border-purple-200 space-x-1">
+                    <button onclick="switchTab('simulator')" id="tab-btn-simulator" class="btn-bounce px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center space-x-1.5 bg-white text-purple-700 shadow-sm">
+                        <span>✨ 原型模擬器</span>
+                    </button>
+                    <button onclick="switchTab('spec')" id="tab-btn-spec" class="btn-bounce px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center space-x-1.5 text-slate-600 hover:text-purple-700 hover:bg-white/50">
+                        <span>📝 規格審核與確認</span>
+                    </button>
+                    <button onclick="switchTab('factory')" id="tab-btn-factory" class="btn-bounce px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center space-x-1.5 text-slate-600 hover:text-purple-700 hover:bg-white/50">
+                        <span>🏭 生產電繡單</span>
+                    </button>
+                </nav>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 z-10">
+
+        <!-- ================= TAB 1: 擬真原型模擬器 (Simulator Window) ================= -->
+        <section id="page-simulator" class="space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Left Column: Customization Controls (5 cols) -->
+                <div class="lg:col-span-5 space-y-5">
+                    
+                    <!-- 1. Base Plushie Selector -->
+                    <div class="bg-white/95 rounded-3xl p-5 shadow-soft border-2 border-purple-200">
+                        <div class="flex justify-between items-center mb-3">
+                            <label class="text-sm font-black text-slate-800 flex items-center">
+                                <span class="w-6 h-6 rounded-lg bg-purple-100 text-purple-700 text-xs flex items-center justify-center mr-2 font-bold">1</span>
+                                選擇娃娃生物基底 (Base Spec)
+                            </label>
+                            <span class="text-[11px] font-bold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100">1.5 頭身坐姿</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                            <button onclick="selectBase('human')" id="btn-base-human" class="base-option-btn border-2 border-purple-500 bg-purple-50/80 rounded-2xl p-2.5 text-center transition-all btn-bounce shadow-sm">
+                                <div class="text-2xl mb-1">👧</div>
+                                <div class="font-bold text-xs text-slate-800">人類娃娃</div>
+                                <div class="text-[10px] text-purple-600 font-medium">圓滾滾短手肢體</div>
+                            </button>
+                            <button onclick="selectBase('cat')" id="btn-base-cat" class="base-option-btn border-2 border-slate-200 rounded-2xl p-2.5 text-center transition-all btn-bounce opacity-70 hover:opacity-100">
+                                <div class="text-2xl mb-1">🐱</div>
+                                <div class="font-bold text-xs text-slate-800">手繪貓咪</div>
+                                <div class="text-[10px] text-slate-400 font-medium">山嘴與擺動小尾</div>
+                            </button>
+                            <button onclick="selectBase('dog')" id="btn-base-dog" class="base-option-btn border-2 border-slate-200 rounded-2xl p-2.5 text-center transition-all btn-bounce opacity-70 hover:opacity-100">
+                                <div class="text-2xl mb-1">🐶</div>
+                                <div class="font-bold text-xs text-slate-800">垂耳狗狗</div>
+                                <div class="text-[10px] text-slate-400 font-medium">大圓耳與萌短腿</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. Full Outfit Structure Selection -->
+                    <div class="bg-white/95 rounded-3xl p-5 shadow-soft border-2 border-purple-200 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-black text-slate-800 flex items-center">
+                                <span class="w-6 h-6 rounded-lg bg-purple-100 text-purple-700 text-xs flex items-center justify-center mr-2 font-bold">2</span>
+                                服裝版型整套重構 (Redraw Pattern)
+                            </label>
+                        </div>
+
+                        <!-- Outfit Presets -->
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <button onclick="selectOutfitStyle('maid')" id="btn-outfit-maid" class="outfit-style-btn p-3 border-2 border-purple-500 bg-purple-50/80 rounded-2xl text-left transition-all btn-bounce flex items-center space-x-2.5 shadow-sm">
+                                <div class="w-9 h-9 rounded-xl bg-purple-200 text-purple-700 flex items-center justify-center font-bold text-lg shrink-0">🖤</div>
+                                <div class="min-w-0">
+                                    <div class="font-bold text-xs text-slate-800 truncate">古典女僕蕾絲裙</div>
+                                    <div class="text-[10px] text-purple-600 truncate">雙馬尾/髮飾/蕾絲圍裙</div>
+                                </div>
+                            </button>
+                            <button onclick="selectOutfitStyle('vest')" id="btn-outfit-vest" class="outfit-style-btn p-3 border-2 border-slate-200 rounded-2xl text-left transition-all btn-bounce flex items-center space-x-2.5 hover:border-purple-300">
+                                <div class="w-9 h-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-lg shrink-0">👔</div>
+                                <div class="min-w-0">
+                                    <div class="font-bold text-xs text-slate-800 truncate">紳士西裝馬甲</div>
+                                    <div class="text-[10px] text-slate-400 truncate">烏黑短髮/雙排扣/領結</div>
+                                </div>
+                            </button>
+                            <button onclick="selectOutfitStyle('toast')" id="btn-outfit-toast" class="outfit-style-btn p-3 border-2 border-slate-200 rounded-2xl text-left transition-all btn-bounce flex items-center space-x-2.5 hover:border-purple-300">
+                                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg shrink-0">🍞</div>
+                                <div class="min-w-0">
+                                    <div class="font-bold text-xs text-slate-800 truncate">吐司麵包套裝</div>
+                                    <div class="text-[10px] text-slate-400 truncate">可口烤吐司座墊/連身服</div>
+                                </div>
+                            </button>
+                            <button onclick="selectOutfitStyle('bow')" id="btn-outfit-bow" class="outfit-style-btn p-3 border-2 border-slate-200 rounded-2xl text-left transition-all btn-bounce flex items-center space-x-2.5 hover:border-purple-300">
+                                <div class="w-9 h-9 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-lg shrink-0">🎀</div>
+                                <div class="min-w-0">
+                                    <div class="font-bold text-xs text-slate-800 truncate">粉紅蝴蝶結蓬裙</div>
+                                    <div class="text-[10px] text-slate-400 truncate">波浪蓬蓬裙/胸前大結</div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Upload Custom Outfit Image -->
+                        <div class="pt-1">
+                            <span class="text-xs font-bold text-slate-600 mb-2 block flex items-center justify-between">
+                                <span>📷 上傳參考相片 (自動轉換為整套手繪服裝)：</span>
+                                <span class="text-[10px] text-purple-600 underline cursor-pointer" onclick="resetToDefaultImage()">重置為範例</span>
+                            </span>
+                            <div class="relative border-2 border-dashed border-purple-300 hover:border-purple-500 rounded-2xl p-3 text-center cursor-pointer transition-all bg-purple-50/30 hover:bg-purple-50/60">
+                                <input type="file" id="outfit-image-upload" accept="image/*" onchange="handleOutfitUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <div class="space-y-1">
+                                    <div class="text-xl">✨ 點擊或拖曳上傳相片</div>
+                                    <p class="text-[11px] text-purple-700 font-bold">自動重繪結構線稿 + 套用貼紙手繪質感</p>
+                                    <p class="text-[10px] text-slate-400">支援 JPG, PNG, WEBP (自動轉為 Q 版 1.5 頭身比例)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 3. Fine-tune Options -->
+                    <div class="bg-white/95 rounded-3xl p-5 shadow-soft border-2 border-purple-200 space-y-3">
+                        <label class="text-xs font-black text-slate-800 flex items-center">
+                            <i class="fa-solid fa-sliders text-purple-500 mr-2"></i> 渲染與外框風格參數微調
+                        </label>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600">貼紙白邊厚度 (Sticker Border)</span>
+                                <span id="border-val" class="font-mono font-bold text-purple-600">18px</span>
+                            </div>
+                            <input type="range" id="slider-border" min="0" max="30" value="18" oninput="updateRenderParams()" class="w-full accent-purple-600 cursor-pointer">
+
+                            <div class="flex justify-between items-center pt-2">
+                                <span class="text-slate-600">微顆粒手繪筆觸粗細</span>
+                                <span id="line-val" class="font-mono font-bold text-purple-600">3.2px</span>
+                            </div>
+                            <input type="range" id="slider-line" min="1.5" max="6" step="0.1" value="3.2" oninput="updateRenderParams()" class="w-full accent-purple-600 cursor-pointer">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Interactive Canvas & Detailed Spec View (7 cols) -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white/95 rounded-3xl p-6 shadow-soft border-2 border-purple-200 flex flex-col items-center justify-between relative overflow-hidden min-h-[620px]">
+                        
+                        <!-- Canvas Header Bar -->
+                        <div class="w-full flex justify-between items-center pb-3 border-b-2 border-purple-100 z-10">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
+                                <span class="text-xs font-black text-slate-700 tracking-wider">SKETCH STICKER RENDER ENGINE</span>
+                            </div>
+                            <span id="canvas-status-tag" class="text-[11px] font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-full border border-purple-200">
+                                🎀 人類娃娃 × 古典女僕蕾絲裙
+                            </span>
+                        </div>
+
+                        <!-- Interactive Canvas Viewport -->
+                        <div class="relative w-full flex items-center justify-center my-4 py-8 rounded-2xl canvas-bg-pattern overflow-hidden">
+                            <!-- Floating Deco Icons -->
+                            <div class="absolute top-4 right-6 text-3xl opacity-80 animate-float">🎀</div>
+                            <div class="absolute bottom-4 left-6 text-2xl opacity-80 animate-float" style="animation-delay: 2s;">✨</div>
+
+                            <!-- Canvas Container -->
+                            <canvas id="plushieCanvas" width="440" height="440" class="relative z-10 filter drop-shadow-xl max-w-full h-auto cursor-pointer" title="點擊切換動作高光"></canvas>
+                        </div>
+
+                        <!-- Dynamic Outfit Structure Breakdown Card -->
+                        <div class="w-full bg-purple-50/80 rounded-2xl p-4 border border-purple-200 text-xs space-y-2 z-10">
+                            <div class="flex justify-between items-center">
+                                <span class="font-black text-purple-900 text-sm flex items-center" id="outfit-desc-title">
+                                    🖤 古典女僕蕾絲裙
+                                </span>
+                                <span class="text-[10px] font-bold bg-white text-purple-700 px-2.5 py-0.5 rounded-full border border-purple-200 shadow-sm">
+                                    版型自動適配完成
+                                </span>
+                            </div>
+                            <p class="text-slate-600 text-xs leading-relaxed" id="outfit-desc-detail">
+                                參考圖 1 女娃風格：重構為黑白經典女僕裙、雙馬尾黑色蝴蝶結與蕾絲胸花，並帶有圓滾滾坐姿肢體。
+                            </p>
+                            <!-- Feature tags -->
+                            <div class="flex flex-wrap gap-1.5 pt-1" id="outfit-feature-tags">
+                                <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-md font-bold">手繪顆粒線稿</span>
+                                <span class="text-[10px] bg-pink-100 text-pink-700 px-2 py-0.5 rounded-md font-bold">貼紙 18px 厚白邊</span>
+                                <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-bold">橢圓豆豆眼+粉腮</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= TAB 2: 系統規格確認清單 (Spec Audit Window) ================= -->
+        <section id="page-spec" class="hidden space-y-6">
+            
+            <!-- Hero Banner -->
+            <div class="relative bg-gradient-to-r from-purple-100 via-pink-100 to-amber-100 rounded-3xl p-6 sm:p-8 shadow-soft border-2 border-white/80 overflow-hidden">
+                <div class="relative z-10 max-w-3xl space-y-2">
+                    <div class="inline-flex items-center space-x-1.5 px-3 py-1 bg-white/90 border border-purple-300 text-purple-700 text-xs rounded-full font-bold">
+                        <span>🎨 手繪貼紙風格與生產標準 (Sketch Sticker Standard)</span>
+                    </div>
+                    <h2 class="text-xl sm:text-3xl font-black text-slate-800 leading-tight">
+                        手繪棉花娃娃與服裝重構 - 關鍵系統規格書 📖
+                    </h2>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed font-medium">
+                        本規範整合「手繪手帳筆觸」、「貼紙厚白邊外框」與「1.5 頭身坐姿娃娃肢體」。系統上傳照片時，會將照片中的整套服裝**自動重繪為符合規格的手繪向量版型與電繡線稿**。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Spec Standard Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <div class="bg-white/90 rounded-3xl p-5 shadow-soft border-2 border-purple-100">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-lg shadow-sm">
+                            ✏️
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">手繪筆觸線條規範</h3>
+                            <p class="text-[10px] text-purple-500 font-medium">Soft Charcoal Lineart</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed bg-purple-50/50 p-3 rounded-2xl border border-purple-100">
+                        採用深灰色調 (#3D3A45) 與微微顆粒感，完全還原繪本風與圖 1 貼紙感，避免純黑 (#000) 帶來的生硬感。
+                    </p>
+                </div>
+
+                <div class="bg-white/90 rounded-3xl p-5 shadow-soft border-2 border-purple-100">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-lg shadow-sm">
+                            🏷️
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">貼紙厚白邊外輪廓</h3>
+                            <p class="text-[10px] text-pink-500 font-medium">Sticker Die-Cut Outline</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed bg-pink-50/50 p-3 rounded-2xl border border-pink-100">
+                        娃娃與服裝整體最外圍自動產生 18px 厚度平滑純白外框 (Die-cut Border)，強化實體周邊貼紙視覺感。
+                    </p>
+                </div>
+
+                <div class="bg-white/90 rounded-3xl p-5 shadow-soft border-2 border-purple-100">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg shadow-sm">
+                            👀
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">豆豆眼與小山嘴</h3>
+                            <p class="text-[10px] text-amber-500 font-medium">Oval Eyes & ω Mouth</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed bg-amber-50/50 p-3 rounded-2xl border border-amber-100">
+                        深色縱向橢圓豆豆眼（帶微小白點高光），眼下配有亮粉色橢圓腮紅；貓狗基底配有經典 (ω) 貓咪嘴。
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Interactive Spec Checklist Table -->
+            <div class="bg-white/95 rounded-3xl p-6 shadow-soft border-2 border-purple-200 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-purple-100">
+                    <div>
+                        <h3 class="text-lg font-black text-slate-800 flex items-center">
+                            <span>📝 系統開發與規格審核確認清單 (Specification Checklist)</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-0.5">開發團隊在實作前端 Canvas 與 AI 服裝重構時需勾選確認之項目：</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span id="checklist-progress" class="text-xs font-bold px-3 py-1 bg-purple-100 text-purple-700 rounded-full border border-purple-300">
+                            已確認: 0 / 6
+                        </span>
+                        <button onclick="resetChecklist()" class="text-xs text-slate-400 hover:text-purple-600 underline font-medium">
+                            重置勾選
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Checklist Grid -->
+                <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Export Spec Report Button -->
+                <div class="pt-2 flex justify-end">
+                    <button onclick="exportSpecificationDraft()" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-black text-xs sm:text-sm rounded-2xl shadow-soft transition btn-bounce flex items-center space-x-2">
+                        <i class="fa-solid fa-file-export"></i>
+                        <span>匯出系統規格確認報告 (JSON Draft)</span>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ================= TAB 3: 工廠生產與電繡對色單 (Factory Spec Sheet) ================= -->
+        <section id="page-factory" class="hidden space-y-6">
+            
+            <div class="bg-white/95 rounded-3xl p-6 shadow-soft border-2 border-purple-200 space-y-6">
+                
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-purple-100 pb-4 gap-2">
+                    <div>
+                        <span class="text-[11px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full border border-amber-300">
+                            🏭 實體打樣專用 Specification
+                        </span>
+                        <h2 class="text-xl font-black text-slate-800 mt-1">實體棉花娃娃生產與電繡對色規格單</h2>
+                    </div>
+                    <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition btn-bounce flex items-center space-x-1.5">
+                        <i class="fa-solid fa-print"></i>
+                        <span>列印打樣單</span>
+                    </button>
+                </div>
+
+                <!-- Color Palette Swatches -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider">1. 手繪風格標準電繡線色號 (Embroidery Thread Swatches)</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-xl mb-2 shadow-inner border border-slate-300" style="background-color: #3d3a45;"></div>
+                            <span class="font-bold text-xs text-slate-800">深灰筆觸線</span>
+                            <span class="text-[10px] font-mono text-slate-400">#3D3A45</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-xl mb-2 shadow-inner border border-slate-300" style="background-color: #ffb3c1;"></div>
+                            <span class="font-bold text-xs text-slate-800">眼下粉腮紅</span>
+                            <span class="text-[10px] font-mono text-slate-400">#FFB3C1</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-xl mb-2 shadow-inner border border-slate-300" style="background-color: #fff5eb;"></div>
+                            <span class="font-bold text-xs text-slate-800">膚色超柔短絨</span>
+                            <span class="text-[10px] font-mono text-slate-400">#FFF5EB</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-xl mb-2 shadow-inner border border-slate-300" style="background-color: #fef08a;"></div>
+                            <span class="font-bold text-xs text-slate-800">髮飾金黃色</span>
+                            <span class="text-[10px] font-mono text-slate-400">#FEF08A</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-xl mb-2 shadow-inner border border-slate-300" style="background-color: #2b2d42;"></div>
+                            <span class="font-bold text-xs text-slate-800">女僕黑布料</span>
+                            <span class="text-[10px] font-mono text-slate-400">#2B2D42</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manufacturing Table -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider">2. 實體娃娃工藝參數表</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse border border-purple-100 rounded-2xl overflow-hidden">
+                            <thead class="bg-purple-100/70 text-purple-900 font-bold">
+                                <tr>
+                                    <th class="p-3 border border-purple-200">項目 (Item)</th>
+                                    <th class="p-3 border border-purple-200">規格要求 (Requirement)</th>
+                                    <th class="p-3 border border-purple-200">材質與針法 (Material & Stitch)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-purple-100 text-slate-700">
+                                <tr>
+                                    <td class="p-3 font-bold border border-purple-100">娃娃基底布料</td>
+                                    <td class="p-3 border border-purple-100">10cm / 20cm 坐姿棉花娃娃，內充優質 PP 棉</td>
+                                    <td class="p-3 border border-purple-100">水晶超柔短毛絨 (毛高 1mm)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold border border-purple-100">五官電繡密度</td>
+                                    <td class="p-3 border border-purple-100">橢圓豆豆眼高光與腮紅平整無漏針</td>
+                                    <td class="p-3 border border-purple-100">高密度榻榻米針 + 密包邊針法</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold border border-purple-100">服裝拆卸與剪裁</td>
+                                    <td class="p-3 border border-purple-100">魔鬼氈背開口，可自由穿脫適配人類/貓/狗</td>
+                                    <td class="p-3 border border-purple-100">棉布 + 手繪風格蕾絲花邊點綴</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold border border-purple-100">貼紙周邊發行</td>
+                                    <td class="p-3 border border-purple-100">同圖案 8cm Die-cut 防水貼紙</td>
+                                    <td class="p-3 border border-purple-100">銅板紙覆啞膜 + 18px 厚白邊切模</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- JSON Export Modal Window -->
+    <div id="export-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border-4 border-purple-200 space-y-4 animate-float">
+            <div class="flex justify-between items-center border-b-2 border-purple-100 pb-3">
+                <h3 class="font-black text-slate-800 text-base flex items-center space-x-2">
+                    <span>🎨 手繪風棉花娃娃規格審核報告 (JSON Engine Export)</span>
+                </h3>
+                <button onclick="closeExportModal()" class="text-slate-400 hover:text-purple-600 text-2xl font-black">&times;</button>
+            </div>
+            <p class="text-xs text-slate-500">此 JSON 報告已包含目前畫布渲染參數與您勾選之規格條目：</p>
+            <textarea id="export-text-area" class="w-full h-64 p-4 font-mono text-xs bg-slate-900 text-purple-300 rounded-2xl border-2 border-slate-800 focus:outline-none" readonly></textarea>
+            <div class="flex justify-end space-x-3 pt-2">
+                <button onclick="closeExportModal()" class="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition">關閉</button>
+                <button onclick="copyExportText()" class="px-5 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition shadow-soft flex items-center space-x-1.5 btn-bounce">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>複製 JSON 內容</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // ================= 1. System Spec Checklist Data =================
+        const checklistData = [
+            {
+                id: 'ck1',
+                title: '貼紙白色外輪廓框線 (White Sticker Border)',
+                question: '娃娃與服裝整體周圍是否自動生成手繪感貼紙厚白邊？',
+                selectedOption: '是的，預設生成 18px 厚白邊貼紙質感',
+                checked: true
+            },
+            {
+                id: 'ck2',
+                title: '五官與筆觸手繪質感 (Soft Sketch Lines)',
+                question: '線條筆觸是否採用微顆粒柔和深灰色 (#3D3A45)，並採用橢圓豆豆眼與粉腮紅？',
+                selectedOption: '採用圖1手繪手帳筆觸與深色橢圓眼',
+                checked: true
+            },
+            {
+                id: 'ck3',
+                title: '棉花娃娃 1.5 頭身坐姿肢體 (Sitting Plush Pose)',
+                question: '娃娃軀幹是否統一為短手臂放膝上的圓滾滾坐姿？',
+                selectedOption: '是的，採用棉花娃娃坐姿規範',
+                checked: true
+            },
+            {
+                id: 'ck4',
+                title: '貓咪與狗狗小山嘴與斑紋 (Cat/Dog Features)',
+                question: '動物基底是否保留圖 2 之小山嘴 (ω) 與溫暖馬卡龍色塊？',
+                selectedOption: '保留經典 (ω) 嘴型與暖色點綴',
+                checked: true
+            },
+            {
+                id: 'ck5',
+                title: '自訂照片服裝重構與簡化',
+                question: '使用者上傳照片時，是否自動將服裝簡化為手繪風格的整套版型？',
+                selectedOption: '重構為帶有手繪邊框的完整服裝版型',
+                checked: true
+            },
+            {
+                id: 'ck6',
+                title: '實體棉花娃娃電繡圖紙對色',
+                question: '是否可匯出符合手繪風格的實體刺繡色彩標記圖檔？',
+                selectedOption: '支援一鍵匯出電繡與生產規格單',
+                checked: true
+            }
+        ];
+
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            checklistData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border-2 transition-all ${item.checked ? 'bg-purple-50/70 border-purple-300' : 'bg-white border-slate-100'}`;
+                
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="check-${item.id}" ${item.checked ? 'checked' : ''} onchange="toggleCheck('${item.id}')" class="w-4 h-4 text-purple-600 rounded border-purple-300 focus:ring-purple-400 cursor-pointer">
+                            <label for="check-${item.id}" class="font-bold text-xs sm:text-sm text-slate-800 cursor-pointer">${item.title}</label>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-2 pl-6 leading-relaxed">${item.question}</p>
+                    <div class="pl-6">
+                        <span class="text-[11px] font-bold text-purple-700 bg-white px-2.5 py-0.5 rounded-md border border-purple-200 inline-block">
+                            ✓ ${item.selectedOption}
+                        </span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updateProgress();
+        }
+
+        function toggleCheck(id) {
+            const item = checklistData.find(i => i.id === id);
+            if (item) item.checked = !item.checked;
+            renderChecklist();
+        }
+
+        function updateProgress() {
+            const count = checklistData.filter(i => i.checked).length;
+            const el = document.getElementById('checklist-progress');
+            if (el) el.innerText = `已確認: ${count} / ${checklistData.length}`;
+        }
+
+        function resetChecklist() {
+            checklistData.forEach(i => i.checked = false);
+            renderChecklist();
+        }
+
+
+        // ================= 2. HTML5 Canvas Rendering Engine =================
+        let currentBase = 'human'; // 'human', 'cat', 'dog'
+        let currentOutfitStyle = 'maid'; // 'maid', 'vest', 'toast', 'bow', 'custom'
+        let uploadedImageObj = null;
+        let animationFrameId = null;
+        let earWiggle = 0;
+
+        // Render configuration sliders
+        let renderBorderWidth = 18;
+        let renderLineWidth = 3.2;
+
+        const outfitInfos = {
+            maid: {
+                title: "🖤 古典女僕蕾絲裙",
+                detail: "參考圖 1 金髮女娃風格：雙馬尾黑蝴蝶結髮飾、黑白女僕連身裙與手繪蕾丝花邊。",
+                tags: ["雙馬尾髮飾", "黑白女僕裙", "蕾絲胸花", "圓滾坐姿"]
+            },
+            vest: {
+                title: "👔 紳士西裝馬甲",
+                detail: "參考圖 1 黑髮男娃風格：深色馬甲背心、白色領口與萌系小蝴蝶結領結。",
+                tags: ["烏黑短髮", "雙排扣背心", "領結點綴", "紳士正裝"]
+            },
+            toast: {
+                title: "🍞 吐司麵包連身服",
+                detail: "參考圖 2 暖色貓咪風格：可口的香烤吐司邊座墊與包覆連身衣。",
+                tags: ["烤吐司座墊", "暖色調連身服", "烘焙紋路", "貓咪吐司"]
+            },
+            bow: {
+                title: "🎀 粉紅蝴蝶結蓬裙",
+                detail: "夢幻手繪波浪裙擺，搭配胸前浪漫粉紅蝴蝶結。",
+                tags: ["浪漫波浪裙", "粉紅大蝴蝶結", "夢幻花邊", "甜蜜甜心"]
+            },
+            custom: {
+                title: "✨ 自訂照片手繪貼紙重構",
+                detail: "提取照片色彩與結構，轉化為帶有厚白邊貼紙質感的手繪娃娃套裝！",
+                tags: ["AI 結構重構", "照片色彩提取", "18px 貼紙框", "獨家訂製"]
+            }
+        };
+
+        function updateRenderParams() {
+            const bVal = document.getElementById('slider-border').value;
+            const lVal = document.getElementById('slider-line').value;
+            renderBorderWidth = parseFloat(bVal);
+            renderLineWidth = parseFloat(lVal);
+            
+            document.getElementById('border-val').innerText = bVal + 'px';
+            document.getElementById('line-val').innerText = lVal + 'px';
+        }
+
+        function selectBase(base) {
+            currentBase = base;
+            ['human', 'cat', 'dog'].forEach(b => {
+                const btn = document.getElementById(`btn-base-${b}`);
+                if (btn) {
+                    if (b === base) {
+                        btn.className = 'base-option-btn border-2 border-purple-500 bg-purple-50/80 rounded-2xl p-2.5 text-center transition-all btn-bounce shadow-sm';
+                    } else {
+                        btn.className = 'base-option-btn border-2 border-slate-200 rounded-2xl p-2.5 text-center transition-all btn-bounce opacity-70 hover:opacity-100';
+                    }
+                }
+            });
+            updateCanvasStatusTag();
+        }
+
+        function selectOutfitStyle(style) {
+            currentOutfitStyle = style;
+            ['maid', 'vest', 'toast', 'bow'].forEach(s => {
+                const btn = document.getElementById(`btn-outfit-${s}`);
+                if (btn) {
+                    if (s === style) {
+                        btn.className = 'outfit-style-btn p-3 border-2 border-purple-500 bg-purple-50/80 rounded-2xl text-left transition-all btn-bounce flex items-center space-x-2.5 shadow-sm';
+                    } else {
+                        btn.className = 'outfit-style-btn p-3 border-2 border-slate-200 rounded-2xl text-left transition-all btn-bounce flex items-center space-x-2.5 hover:border-purple-300';
+                    }
+                }
+            });
+
+            const info = outfitInfos[style];
+            document.getElementById('outfit-desc-title').innerHTML = info.title;
+            document.getElementById('outfit-desc-detail').innerText = info.detail;
+            
+            // Render tags
+            const tagsContainer = document.getElementById('outfit-feature-tags');
+            if (tagsContainer) {
+                tagsContainer.innerHTML = info.tags.map(t => `<span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-md font-bold">${t}</span>`).join('');
+            }
+
+            updateCanvasStatusTag();
+        }
+
+        function handleOutfitUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const img = new Image();
+                    img.onload = function() {
+                        uploadedImageObj = img;
+                        currentOutfitStyle = 'custom';
+                        document.getElementById('outfit-desc-title').innerText = "✨ " + file.name + " (已重構為手繪)";
+                        document.getElementById('outfit-desc-detail').innerText = outfitInfos['custom'].detail;
+                        updateCanvasStatusTag();
+                    }
+                    img.src = evt.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function resetToDefaultImage() {
+            uploadedImageObj = null;
+            selectOutfitStyle('maid');
+        }
+
+        function updateCanvasStatusTag() {
+            const baseText = currentBase === 'human' ? '人類娃娃' : (currentBase === 'cat' ? '手繪貓咪' : '垂耳狗狗');
+            const styleText = outfitInfos[currentOutfitStyle].title.split(' ')[1] || '自訂服裝';
+            const tag = document.getElementById('canvas-status-tag');
+            if (tag) tag.innerText = `🎀 ${baseText} × ${styleText}`;
+        }
+
+
+        // ================= Core Canvas Drawing Pipeline =================
+        function drawPlushieSticker() {
+            const canvas = document.getElementById('plushieCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            earWiggle += 0.035;
+            const wiggle = Math.sin(earWiggle) * 3.5;
+
+            const cx = w / 2;
+            const cy = h / 2 + 10;
+
+            // -------------------- PASS 1: Thick White Die-Cut Border --------------------
+            if (renderBorderWidth > 0) {
+                ctx.save();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = renderBorderWidth;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.fillStyle = '#ffffff';
+
+                drawPlushieBodyAndOutfit(ctx, cx, cy, wiggle, true);
+                ctx.restore();
+            }
+
+            // -------------------- PASS 2: Detailed Lineart & Colors --------------------
+            ctx.save();
+            ctx.strokeStyle = '#3d3a45'; // Warm Charcoal Lineart
+            ctx.lineWidth = renderLineWidth;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            drawPlushieBodyAndOutfit(ctx, cx, cy, wiggle, false);
+            ctx.restore();
+
+            animationFrameId = requestAnimationFrame(drawPlushieSticker);
+        }
+
+        // Draw body and outfit layers (Shared between Pass 1 and Pass 2)
+        function drawPlushieBodyAndOutfit(ctx, cx, cy, wiggle, isOutlinePass) {
+            
+            // 1. Toast Cushion Base (Reference Fig 2)
+            if (currentOutfitStyle === 'toast') {
+                const toastY = cy + 42;
+                ctx.fillStyle = isOutlinePass ? '#ffffff' : '#fceade';
+                ctx.beginPath();
+                ctx.roundRect(cx - 105, toastY - 20, 210, 88, 26);
+                ctx.fill();
+                if (!isOutlinePass) {
+                    ctx.stroke();
+                    // Toast Crust Edge
+                    ctx.fillStyle = '#ddb892';
+                    ctx.beginPath();
+                    ctx.roundRect(cx - 103, toastY + 28, 206, 38, 16);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+            }
+
+            // 2. Plushie Body & Sitting Legs
+            const bodyY = cy + 15;
+
+            // Torso
+            ctx.fillStyle = isOutlinePass ? '#ffffff' : (currentBase === 'cat' ? '#fff9f2' : (currentBase === 'dog' ? '#fff3e0' : '#fff5eb'));
+            ctx.beginPath();
+            ctx.ellipse(cx, bodyY + 30, 48, 42, 0, 0, Math.PI * 2);
+            ctx.fill();
+            if (!isOutlinePass) ctx.stroke();
+
+            // Sitting Short Legs (Foot Left & Right)
+            ctx.beginPath();
+            ctx.arc(cx - 38, bodyY + 58, 16, 0, Math.PI * 2);
+            ctx.arc(cx + 38, bodyY + 58, 16, 0, Math.PI * 2);
+            ctx.fill();
+            if (!isOutlinePass) {
+                ctx.stroke();
+                // Shoe soles (Reference Fig 1)
+                ctx.fillStyle = '#3a3845';
+                ctx.beginPath();
+                ctx.arc(cx - 38, bodyY + 60, 11, 0, Math.PI * 2);
+                ctx.arc(cx + 38, bodyY + 60, 11, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Outfit Layer
+            drawOutfitDetails(ctx, cx, bodyY, isOutlinePass);
+
+            // 3. Short Plush Arms
+            ctx.fillStyle = isOutlinePass ? '#ffffff' : (currentBase === 'cat' ? '#fff9f2' : '#fff5eb');
+            ctx.beginPath();
+            ctx.ellipse(cx - 32, bodyY + 32, 11, 16, Math.PI / 8, 0, Math.PI * 2);
+            ctx.ellipse(cx + 32, bodyY + 32, 11, 16, -Math.PI / 8, 0, Math.PI * 2);
+            ctx.fill();
+            if (!isOutlinePass) ctx.stroke();
+
+            // 4. Head & Animal Ears
+            const headY = cy - 52;
+
+            if (currentBase === 'cat') {
+                ctx.fillStyle = isOutlinePass ? '#ffffff' : '#fff9f2';
+                // Cat ears
+                ctx.beginPath();
+                ctx.moveTo(cx - 55, headY - 20);
+                ctx.lineTo(cx - 75 + wiggle, headY - 75);
+                ctx.lineTo(cx - 20, headY - 55);
+                ctx.closePath();
+                ctx.fill();
+                if (!isOutlinePass) ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(cx + 55, headY - 20);
+                ctx.lineTo(cx + 75 - wiggle, headY - 75);
+                ctx.lineTo(cx + 20, headY - 55);
+                ctx.closePath();
+                ctx.fill();
+                if (!isOutlinePass) ctx.stroke();
+
+                // Pink inner ear dots
+                if (!isOutlinePass) {
+                    ctx.fillStyle = '#f4a261';
+                    ctx.beginPath();
+                    ctx.arc(cx - 52, headY - 50, 8, 0, Math.PI * 2);
+                    ctx.arc(cx + 52, headY - 50, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+            } else if (currentBase === 'dog') {
+                // Fluffy floppy dog ears
+                ctx.fillStyle = isOutlinePass ? '#ffffff' : '#e07a5f';
+                ctx.beginPath();
+                ctx.ellipse(cx - 72, headY, 20, 38, Math.PI / 6, 0, Math.PI * 2);
+                ctx.ellipse(cx + 72, headY, 20, 38, -Math.PI / 6, 0, Math.PI * 2);
+                ctx.fill();
+                if (!isOutlinePass) ctx.stroke();
+            }
+
+            // Head Sphere
+            ctx.fillStyle = isOutlinePass ? '#ffffff' : (currentBase === 'cat' ? '#fff9f2' : (currentBase === 'dog' ? '#fff3e0' : '#fff5eb'));
+            ctx.beginPath();
+            ctx.arc(cx, headY, 68, 0, Math.PI * 2);
+            ctx.fill();
+            if (!isOutlinePass) ctx.stroke();
+
+            // Human Hairstyle (Reference Fig 1)
+            if (currentBase === 'human' && !isOutlinePass) {
+                if (currentOutfitStyle === 'maid') {
+                    // Golden hair + ponytails (Fig 1 Female)
+                    ctx.fillStyle = '#fef08a';
+                    // Side Ponytails
+                    ctx.beginPath();
+                    ctx.ellipse(cx - 68, headY - 10, 22, 45, Math.PI / 5, 0, Math.PI * 2);
+                    ctx.ellipse(cx + 68, headY - 10, 22, 45, -Math.PI / 5, 0, Math.PI * 2);
+                    ctx.fill(); ctx.stroke();
+
+                    // Bangs
+                    ctx.beginPath();
+                    ctx.arc(cx, headY - 15, 68, Math.PI * 1.1, Math.PI * 1.9);
+                    ctx.fill(); ctx.stroke();
+
+                    // Black hair ribbons
+                    ctx.fillStyle = '#2b2d42';
+                    ctx.beginPath();
+                    ctx.arc(cx - 58, headY - 35, 12, 0, Math.PI * 2);
+                    ctx.arc(cx + 58, headY - 35, 12, 0, Math.PI * 2);
+                    ctx.fill();
+
+                } else {
+                    // Short dark hair (Fig 1 Male)
+                    ctx.fillStyle = '#212529';
+                    ctx.beginPath();
+                    ctx.arc(cx, headY - 10, 69, Math.PI * 1.05, Math.PI * 1.95);
+                    ctx.fill(); ctx.stroke();
+                }
+            }
+
+            // 5. Facial Features: Oval Eyes + Pink Blush
+            if (!isOutlinePass) {
+                const eyeY = headY + 12;
+
+                // Oval Dark Eyes
+                ctx.fillStyle = '#312e38';
+                ctx.beginPath();
+                ctx.ellipse(cx - 26, eyeY, 6.5, 11, 0, 0, Math.PI * 2);
+                ctx.ellipse(cx + 26, eyeY, 6.5, 11, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Eye Catchlight Dots
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(cx - 28, eyeY - 4, 2.5, 0, Math.PI * 2);
+                ctx.arc(cx + 24, eyeY - 4, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Oval Pink Blush (Reference Fig 1 & Fig 2)
+                ctx.fillStyle = '#ffb3c1';
+                ctx.beginPath();
+                ctx.ellipse(cx - 32, eyeY + 16, 11, 6, 0, 0, Math.PI * 2);
+                ctx.ellipse(cx + 32, eyeY + 16, 11, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Animal (ω) Mouth
+                if (currentBase !== 'human') {
+                    ctx.strokeStyle = '#312e38';
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.arc(cx - 3.5, eyeY + 12, 3.5, 0, Math.PI);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(cx + 3.5, eyeY + 12, 3.5, 0, Math.PI);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Draw Outfit Details
+        function drawOutfitDetails(ctx, cx, bodyY, isOutlinePass) {
+            if (currentOutfitStyle === 'maid') {
+                // Classic Maid Lace Outfit
+                ctx.fillStyle = isOutlinePass ? '#ffffff' : '#2b2d42';
+                ctx.beginPath();
+                ctx.moveTo(cx - 35, bodyY + 5);
+                ctx.lineTo(cx - 48, bodyY + 48);
+                ctx.lineTo(cx + 48, bodyY + 48);
+                ctx.lineTo(cx + 35, bodyY + 5);
+                ctx.closePath();
+                ctx.fill();
+                if (!isOutlinePass) {
+                    ctx.stroke();
+                    // White Apron
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.roundRect(cx - 20, bodyY + 10, 40, 38, 6);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+
+            } else if (currentOutfitStyle === 'vest') {
+                // Gentleman Vest
+                ctx.fillStyle = isOutlinePass ? '#ffffff' : '#1b4332';
+                ctx.beginPath();
+                ctx.roundRect(cx - 32, bodyY + 8, 64, 42, 10);
+                ctx.fill();
+                if (!isOutlinePass) {
+                    ctx.stroke();
+                    // White collar
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.moveTo(cx - 15, bodyY + 8);
+                    ctx.lineTo(cx, bodyY + 25);
+                    ctx.lineTo(cx + 15, bodyY + 8);
+                    ctx.closePath();
+                    ctx.fill(); ctx.stroke();
+                    // Bowtie
+                    ctx.fillStyle = '#212529';
+                    ctx.beginPath();
+                    ctx.arc(cx, bodyY + 16, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+            } else if (currentOutfitStyle === 'bow') {
+                // Pink Bow Outfit
+                ctx.fillStyle = isOutlinePass ? '#ffffff' : '#ffb3c1';
+                ctx.beginPath();
+                ctx.roundRect(cx - 36, bodyY + 10, 72, 42, 12);
+                ctx.fill();
+                if (!isOutlinePass) {
+                    ctx.stroke();
+                    ctx.fillStyle = '#ff4d6d';
+                    ctx.beginPath();
+                    ctx.arc(cx, bodyY + 18, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+            } else if (currentOutfitStyle === 'custom' && uploadedImageObj && !isOutlinePass) {
+                // Custom Uploaded Outfit Layer
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, bodyY + 26, 22, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.drawImage(uploadedImageObj, cx - 22, bodyY + 4, 44, 44);
+                ctx.restore();
+                ctx.stroke();
+            }
+        }
+
+
+        // ================= 3. Navigation & Export Logic =================
+        function switchTab(tab) {
+            const pageSim = document.getElementById('page-simulator');
+            const pageSpec = document.getElementById('page-spec');
+            const pageFactory = document.getElementById('page-factory');
+
+            const btnSim = document.getElementById('tab-btn-simulator');
+            const btnSpec = document.getElementById('tab-btn-spec');
+            const btnFactory = document.getElementById('tab-btn-factory');
+
+            // Hide all
+            pageSim.classList.add('hidden');
+            pageSpec.classList.add('hidden');
+            pageFactory.classList.add('hidden');
+
+            const inactiveClass = 'btn-bounce px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center space-x-1.5 text-slate-600 hover:text-purple-700 hover:bg-white/50';
+            const activeClass = 'btn-bounce px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center space-x-1.5 bg-white text-purple-700 shadow-sm';
+
+            btnSim.className = inactiveClass;
+            btnSpec.className = inactiveClass;
+            btnFactory.className = inactiveClass;
+
+            if (tab === 'simulator') {
+                pageSim.classList.remove('hidden');
+                btnSim.className = activeClass;
+            } else if (tab === 'spec') {
+                pageSpec.classList.remove('hidden');
+                btnSpec.className = activeClass;
+            } else if (tab === 'factory') {
+                pageFactory.classList.remove('hidden');
+                btnFactory.className = activeClass;
+            }
+        }
+
+        function exportSpecificationDraft() {
+            const checkedItems = checklistData.filter(i => i.checked);
+            
+            const exportData = {
+                systemName: "🎨 手繪貼紙風棉花娃娃客製化規格確認報告",
+                version: "4.2-ProductionReady",
+                exportTime: new Date().toLocaleString('zh-TW'),
+                canvasParams: {
+                    borderWidth: renderBorderWidth + "px",
+                    lineWidth: renderLineWidth + "px",
+                    currentBase: currentBase,
+                    currentOutfit: currentOutfitStyle
+                },
+                artStyleProfile: {
+                    styleType: "Soft Sketch Sticker Outline (圖1/圖2 參考風格)",
+                    lineartStyle: "Soft Grain Charcoal Texture (#3D3A45)",
+                    stickerOutlineWidth: renderBorderWidth + "px Solid White Border",
+                    eyeStyle: "Oval Dark Eyes with Minimal Highlight & Soft Blush"
+                },
+                confirmedSpecs: checkedItems.map(item => ({
+                    title: item.title,
+                    requirement: item.selectedOption
+                }))
+            };
+
+            const area = document.getElementById('export-text-area');
+            if (area) area.value = JSON.stringify(exportData, null, 2);
+            const modal = document.getElementById('export-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeExportModal() {
+            const modal = document.getElementById('export-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function copyExportText() {
+            const textarea = document.getElementById('export-text-area');
+            if (textarea) {
+                textarea.select();
+                document.execCommand('copy');
+                alert('✨ 規格報告 (JSON) 已成功複製到剪貼簿！🎨');
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderChecklist();
+            drawPlushieSticker();
+        };
+    </script>
+</body>
+</html>
